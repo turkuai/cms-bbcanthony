@@ -1,5 +1,4 @@
 <?php
-// Dynamically load footer text from JSON
 $footerText = json_decode(file_get_contents('data/footer.json'), true);
 ?>
 
@@ -70,9 +69,7 @@ $footerText = json_decode(file_get_contents('data/footer.json'), true);
     </header>
     
     <div class="container">
-        <!-- Dynamically loaded logo -->
         <div class="logo">
-            <img src="images/logo.png" alt="Company Logo">
         </div>
 
         <img src="https://i.ytimg.com/vi/hNBDtBfv6wE/maxresdefault.jpg" alt="Header Image">

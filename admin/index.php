@@ -76,7 +76,7 @@
 
   <div class="container">
     <div class="logo">
-      <span id="logoText">LOGO</span>
+      <img id="logoImage" src="default-logo.jpg" alt="Logo" style="height: 50px;">
       <button onclick="editLogo()">Edit Logo</button>
     </div>
 
@@ -118,25 +118,6 @@
       <input type="url" id="linkHref" placeholder="Link URL" />
       <button onclick="addOrUpdateLink()">Add / Save</button>
     </div>
-    <script>
-    document.getElementById('footerForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        
-        const footerText = document.querySelector('textarea[name="footer"]').value;
-        
-        fetch('api/save-footer.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ footerText })
-        })
-        .then(response => response.json())
-        .then(data => alert(data.message))
-        .catch(error => alert("Error: " + error));
-    });
-</script>
-
   </footer>
 
   <script>
@@ -144,7 +125,7 @@
 
     function loadData() {
       const logo = localStorage.getItem("logo");
-      if (logo) document.getElementById("logoText").innerText = logo;
+      if (logo) document.getElementById("logoImage").src = logo;
 
       const footer = localStorage.getItem("footerNote");
       if (footer) document.getElementById("footerNote").innerText = footer;
@@ -163,15 +144,22 @@
         `;
         container.appendChild(span);
       });
-
-      loadArticles();
     }
 
     function editLogo() {
-      const newLogo = prompt("Enter new logo text:");
-      if (newLogo) {
-        localStorage.setItem("logo", newLogo);
-        document.getElementById("logoText").innerText = newLogo;
+      const newLogoUrl = prompt("Enter the new logo image URL:");
+
+      if (newLogoUrl) {
+        // Store the new image URL in localStorage
+        localStorage.setItem("logo", newLogoUrl);
+
+        // Update the logo image inside the container
+        const logoImage = document.getElementById("logoImage");
+
+        // Check if the logo image element exists
+        if (logoImage) {
+          logoImage.src = newLogoUrl;
+        }
       }
     }
 
@@ -218,62 +206,6 @@
       links.splice(index, 1);
       localStorage.setItem("socialLinks", JSON.stringify(links));
       loadData();
-    }
-
-    function loadArticles() {
-      const articles = JSON.parse(localStorage.getItem("articles")) || [];
-      const articleElements = document.querySelectorAll(".article");
-
-      articleElements.forEach((articleEl, index) => {
-        const titleEl = articleEl.querySelector("h3");
-        const paraEl = articleEl.querySelector("p");
-        const imgEl = articleEl.querySelector("img");
-
-        if (articles[index]) {
-          titleEl.innerText = articles[index].title;
-          paraEl.innerText = articles[index].content;
-        }
-
-        // Add Edit Button if not already added
-        if (!articleEl.querySelector(".edit-article-btn")) {
-          const editBtn = document.createElement("button");
-          editBtn.innerText = "Edit Section";
-          editBtn.className = "edit-article-btn";
-          editBtn.style.marginLeft = "10px";
-          editBtn.onclick = () => editArticle(index);
-          articleEl.querySelector("div").appendChild(editBtn);
-        }
-      });
-    }
-
-    function editArticle(index) {
-      const articleElements = document.querySelectorAll(".article");
-      const articleEl = articleElements[index];
-      const titleEl = articleEl.querySelector("h3");
-      const paraEl = articleEl.querySelector("p");
-
-      const newTitle = prompt("Edit title:", titleEl.innerText);
-      const newContent = prompt("Edit paragraph:", paraEl.innerText);
-
-      if (newTitle !== null && newContent !== null) {
-        titleEl.innerText = newTitle;
-        paraEl.innerText = newContent;
-
-        saveArticles();
-      }
-    }
-
-    function saveArticles() {
-      const articleElements = document.querySelectorAll(".article");
-      const articles = [];
-
-      articleElements.forEach((articleEl) => {
-        const title = articleEl.querySelector("h3").innerText;
-        const content = articleEl.querySelector("p").innerText;
-        articles.push({ title, content });
-      });
-
-      localStorage.setItem("articles", JSON.stringify(articles));
     }
 
     window.onload = loadData;
