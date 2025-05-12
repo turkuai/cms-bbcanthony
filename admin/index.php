@@ -118,6 +118,25 @@
       <input type="url" id="linkHref" placeholder="Link URL" />
       <button onclick="addOrUpdateLink()">Add / Save</button>
     </div>
+    <script>
+    document.getElementById('footerForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        
+        const footerText = document.querySelector('textarea[name="footer"]').value;
+        
+        fetch('api/save-footer.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ footerText })
+        })
+        .then(response => response.json())
+        .then(data => alert(data.message))
+        .catch(error => alert("Error: " + error));
+    });
+</script>
+
   </footer>
 
   <script>

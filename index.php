@@ -1,3 +1,8 @@
+<?php
+// Dynamically load footer text from JSON
+$footerText = json_decode(file_get_contents('data/footer.json'), true);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,12 +66,17 @@
 </head>
 <body>
     <header>
-        <h2>http://host:port/cms</h2>
+        <h2>http://localhost/cms</h2>
     </header>
     
     <div class="container">
-        <div class="logo">LOGO</div>
-        <img src="https://i.ytimg.com/vi/hNBDtBfv6wE/maxresdefault.jpg">
+        <!-- Dynamically loaded logo -->
+        <div class="logo">
+            <img src="images/logo.png" alt="Company Logo">
+        </div>
+
+        <img src="https://i.ytimg.com/vi/hNBDtBfv6wE/maxresdefault.jpg" alt="Header Image">
+        
         <nav>
             <a href="#">Home</a>
             <a href="#">About</a>
@@ -76,7 +86,7 @@
         <div class="article">
             <div>
                 <h3>HI THERE</h3>
-                <p>wASSUP</p>
+                <p>What's up</p>
             </div>
             <img src="https://m.media-amazon.com/images/S/pv-target-images/ba6bf7241aadcaf2bb253c845ae10f1eb0252c8bf212dcb0b457dc3f7cb135ef.jpg" alt="Article Image">
         </div>
@@ -91,8 +101,8 @@
     </div>
     
     <footer>
-        <p>Your company's name</p>
-        <p>&copy; 2024, Company's name, All rights reserved.</p>
+        <p><?= htmlspecialchars($footerText['text'] ?? 'Default footer text') ?></p>
+        <p>&copy; 2024, Your Company, All rights reserved.</p>
         <div class="footer-links">
             <a href="#">Home</a>
             <a href="#">About</a>
