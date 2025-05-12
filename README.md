@@ -6,3 +6,4 @@ https://expert-adventure-9j4k64m.pages.github.io/
 https://vocal-moxie-a1dff7.netlify.app/ 
 https://turkuai.github.io/cms-bbcanthony/
 http://194.197.245.5/tiev23p/anthony/CMS/
+http://localhost/cms-bbcanthony/ADMIN/
