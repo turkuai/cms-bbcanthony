@@ -12,7 +12,7 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: 194.197.245.5
-        username: ${{secrets.user}}
+        username: ${{secrets.user}} 
         password: ${{ secrets.password }}
         server-dir : CMS/
         

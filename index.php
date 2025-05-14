@@ -1,5 +1,25 @@
 <?php
-$footerText = json_decode(file_get_contents('data/footer.json'), true);
+// index.php
+require_once 'config.php'; // Adjust path if config.php is outside web root
+
+// Fetch footer links
+$links_result = $conn->query('SELECT name, href FROM links');
+$footer_links = [];
+while ($row = $links_result->fetch_assoc()) {
+    $footer_links[] = $row;
+}
+
+// Fetch sections
+$sections_result = $conn->query('SELECT title, description, image_url FROM sections');
+$sections = [];
+while ($row = $sections_result->fetch_assoc()) {
+    $sections[] = $row;
+}
+
+$conn->close();
+
+// Load footer text from JSON
+$footerText = json_decode(file_get_contents('data/footer.json'), true) ?? ['text' => 'Default footer text'];
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +90,7 @@ $footerText = json_decode(file_get_contents('data/footer.json'), true);
     
     <div class="container">
         <div class="logo">
+            <img id="logoImage" src="default-logo.jpg" alt="Logo" style="height: 50px;">
         </div>
 
         <img src="https://i.ytimg.com/vi/hNBDtBfv6wE/maxresdefault.jpg" alt="Header Image">
@@ -80,34 +101,31 @@ $footerText = json_decode(file_get_contents('data/footer.json'), true);
             <a href="#">Blog</a>
         </nav>
         
-        <div class="article">
-            <div>
-                <h3>HI THERE</h3>
-                <p>What's up</p>
+        <?php foreach ($sections as $section): ?>
+            <div class="article">
+                <div>
+                    <h3><?= htmlspecialchars($section['title']) ?></h3>
+                    <p><?= htmlspecialchars($section['description']) ?></p>
+                </div>
+                <img src="<?= htmlspecialchars($section['image_url']) ?>" alt="Article Image">
             </div>
-            <img src="https://m.media-amazon.com/images/S/pv-target-images/ba6bf7241aadcaf2bb253c845ae10f1eb0252c8bf212dcb0b457dc3f7cb135ef.jpg" alt="Article Image">
-        </div>
-        
-        <div class="article">
-            <div>
-                <h3>Hey You</h3>
-                <p>Yes you</p>
-            </div>
-            <img src="https://m.media-amazon.com/images/M/MV5BNjgxMTQ0OTAwOF5BMl5BanBnXkFtZTgwODIwNTU1MjE@._V1_.jpg" alt="Article Image">
-        </div>
+        <?php endforeach; ?>
     </div>
     
     <footer>
-        <p><?= htmlspecialchars($footerText['text'] ?? 'Default footer text') ?></p>
-        <p>&copy; 2024, Your Company, All rights reserved.</p>
+        <p><?= htmlspecialchars($footerText['text']) ?></p>
+        <p>© 2024, Your Company, All rights reserved.</p>
         <div class="footer-links">
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Blog</a>
-            <a href="#">Facebook</a>
-            <a href="#">LinkedIn</a>
-            <a href="#">GitHub</a>
+            <?php foreach ($footer_links as $link): ?>
+                <a href="<?= htmlspecialchars($link['href']) ?>"><?= htmlspecialchars($link['name']) ?></a>
+            <?php endforeach; ?>
         </div>
     </footer>
+
+    <script>
+        // Load logo from localStorage if available
+        const logo = localStorage.getItem("logo");
+        if (logo) document.getElementById("logoImage").src = logo;
+    </script>
 </body>
 </html>
